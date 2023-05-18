@@ -40,3 +40,17 @@
 .read-the-docs {
   color: #888;
 }
+
+main {
+  display: grid;
+  grid-template-rows: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.border {
+  border: 1px solid #eee;
+  padding: 1rem;
+  font-size: 2rem;
+  height: 50px;
+  width: 50px;
+}
