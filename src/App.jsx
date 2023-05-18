@@ -4,23 +4,33 @@ import Tile from './components/Tile';
 
 function App() {
 
+  const NUMBER_OF_TILES = 9;
+
   const [turn, setTurn] = useState('o');
-  const [winner, setWinnter] = useState(null);
+  const [winner, setWinner] = useState(null);
   const [board, setBoard] = useState([
     ['', '', ''],
     ['', '', ''],
     ['', '', '']
   ]);
+  
+  const resetStates = () => {
+    setTurn('o');
+    setWinner(null);
+    setBoard([
+      ['', '', ''],
+      ['', '', ''],
+      ['', '', '']
+    ]);
+  }
 
-  useEffect(() => {
-    if (checkWin(board, 'o')) {
-      setWinnter('o 우승');
-    } else if (checkWin(board, 'x')) {
-      setWinnter('x 우승');
-    }
-  }, [board]);
+  const checkDraw = () => {
+    const filtered = board.flat().filter(tile => tile);
+    if (filtered.length === NUMBER_OF_TILES) return true;
+    return false;
+  }
 
-  function checkWin(board, player) {
+  const checkWin = (board, player) => {
     // Check rows
     for (let i = 0; i < 3; i++) {
       if (board[i][0] === player && board[i][1] === player && board[i][2] === player) {
@@ -44,14 +54,27 @@ function App() {
     return false;
   }
 
+
+  useEffect(() => {
+    if (checkWin(board, 'o')) {
+      setWinner('O Won');
+    } else if (checkWin(board, 'x')) {
+      setWinner('X Won!');
+    } else if (checkDraw()) {
+      setWinner('Draw!');
+    }
+
+  }, [board]);
+  
   return (
     <>
-      <h1>{winner}</h1>
+      <h1>{winner || `${turn.toUpperCase()} Turn`}</h1>
       <main>
         {board.flat().map((tile, i) => (
-          <Tile key={i} setBoard={setBoard} turn={turn} setTurn={setTurn} tile={tile} i={i} />
+          <Tile key={i} setBoard={setBoard} winner={winner} turn={turn} setTurn={setTurn} tile={tile} i={i} />
         ))}
       </main>
+      {winner && <button onClick={resetStates}>Play Again</button>}
     </>
   )
 }
